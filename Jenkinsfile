@@ -30,8 +30,8 @@ stages {
     stage('Build stage') {
         steps {
             script {
-                sh 'mvn clean package'
                 echo 'This is build stage'
+                sh 'mvn clean package'
                 customImage=docker.build("${env.DOCKER_REGISTRY}")
                 customImage.push("${env.BUILD_ID}")
             }
