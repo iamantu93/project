@@ -46,6 +46,7 @@ pipeline {
             } // <-- Added the missing closing brace here
         }
     }
+    /*
     post { 
         success { 
             cleanWs()
@@ -62,4 +63,5 @@ pipeline {
             echo "Build is unstable"
         }
     }
+    */
 }
