@@ -35,11 +35,13 @@ pipeline {
                 echo 'This is deploy stage'
                 script {
                     sh "sed -i 's|\\(iamantu93/project:\\)[0-9]\\+|\\1${BUILD_ID}|' kubernetesdeploy/springdeploy.yml"
+                   /*
                     sh "git add ."
                     sh "git commit -m 'Updated build is ${BUILD_ID} ' "
                     withCredentials(credentialsId: 'iamantu93') {
                         sh "git push origin master"
-                    } 
+                    }
+                    */ 
                 }
             } // <-- Added the missing closing brace here
         }
