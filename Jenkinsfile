@@ -38,7 +38,7 @@ stages {
         steps {
             echo 'This is deploy stage'
             script {
-                sh "sed -i 's|\(image: iamantu93/project:\)[0-9]\+|\1'${env.BUILD_ID}'|' kubernetesdeploy/springdeploy.yml"
+                sh "sed -i 's|\(image: registry.dgdp.com:5000/backend-config:\)[0-9]\+|\1'"\${env.BUILD_ID\}"'|' kubernetesdeploy/springdeploy.yml"
                 sh "git add ."
                 sh "git commit -m 'Updated build is ${env.BUILD_ID} ' "
                  withCredentials(credentialsId: 'iamantu93') {
