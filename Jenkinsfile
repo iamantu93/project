@@ -15,7 +15,7 @@ pipeline {
                 script {
                     echo 'This is build stage'
                     sh 'mvn clean package'
-                    sh "docker build -t ${DOCKER_REGISTRY}:${BUILD_ID}"  // Use ${DOCKER_REGISTRY} and ${BUILD_ID} directly
+                    sh "docker build -t ${DOCKER_REGISTRY}:${BUILD_ID} ."  // Use ${DOCKER_REGISTRY} and ${BUILD_ID} directly
                     sh "docker push ${DOCKER_REGISTRY}:${BUILD_ID}"
                 }
             } 
