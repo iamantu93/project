@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: spring
-        image: iamantu93/project:TAG
+        image: iamantu93/project:1
         ports:
         - containerPort: 8080
 

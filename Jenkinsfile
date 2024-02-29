@@ -10,30 +10,16 @@ parameters {
         GIT_REPO = "https://github.com/iamantu93/project.git"
         DOCKER_REGISTRY = "iamantu93/project"
     }
-    
-    triggers {
-        pollSCM('H/2 * * * *') // Polls the SCM every 2 minutes
-    }
-tools {
-    maven 'MAVEN-3.6.3' 
-    jdk 'JAVA_11'
-    git 'Git-2.39.3'
-}
-stages {
-    stage('git clone') {
-        steps {
-            echo 'cloning git repository'
-            git branch: "${BRANCH}", url: "${GIT_REPO}"
 
-        } 
-    }   
+stages {
+      
     stage('Build stage') {
         steps {
             script {
                 echo 'This is build stage'
                 sh 'mvn clean package'
-                customImage=docker.build("${env.DOCKER_REGISTRY}")
-                customImage.push("${env.BUILD_ID}")
+                sh 'docker build -t ${env.DOCKER_REGISTRY}:${env.BUILD_ID}'
+                sh 'docker push ${env.DOCKER_REGISTRY}:${env.BUILD_ID}'
             }
         } 
     }
@@ -48,17 +34,18 @@ stages {
         } 
     }
     
-    stage('Deploy stage') {
+    stage('Updating manifest in git') {
         steps {
             echo 'This is deploy stage'
             script {
-               kubeconfig(credentialsId: 'kubeconf' ) {
-                    sh "sed -i 's/TAG/${env.BUILD_ID}/g' kubernetesdeploy/springdeploy.yml" 
-                    sh "/usr/bin/kubectl apply -f kubernetesdeploy/mysqldeploy.yml"
-                    sh "/usr/bin/kubectl apply -f kubernetesdeploy/springdeploy.yml"
-                }
-            }
-        } 
+                sh "sed -i 's|\(image: iamantu93/project:\)[0-9]\+|\1'"${env.BUILD_ID}"'|' kubernetesdeploy/springdeploy.yml"
+                sh "git add ."
+                sh "git commit -m 'Updated build is ${env.BUILD_ID} ' "
+                 withCredentials(credentialsId: 'iamantu93') {
+                    sh "git push origin master"
+                } 
+               
+            } 
     }
     
  }
