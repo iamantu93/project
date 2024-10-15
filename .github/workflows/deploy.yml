@@ -7,7 +7,6 @@ on:
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKERHUB_PASS: ${{ secrets.DOCKER_PASS }}
-  IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
 
 jobs:
   build-and-deploy:
