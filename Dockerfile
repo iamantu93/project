@@ -1,5 +1,5 @@
 # Use a base image with Java 11 installed
-FROM openjdk:11
+FROM openjdk:11 as build
 
 # Set the working directory inside the container
 WORKDIR /app
