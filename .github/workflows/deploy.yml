@@ -28,3 +28,8 @@ jobs:
     - name: Update manifest
       run: |
            sed -i  's/1/${{ github.run_number }}/g' kubernetesdeploy/springdeploy.yml
+           git config --global user.name 'Antu Acharjee'
+           git config --global user.email 'iam.antu93@gmail.com'
+           git add .
+           git commit -m "Update manifest"
+           git push
