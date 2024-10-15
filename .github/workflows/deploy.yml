@@ -11,17 +11,11 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: runner-1
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
-
-    - name: Set up Java
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '11'
 
     - name: Maven build
       run: mvn clean package
