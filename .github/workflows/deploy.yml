@@ -25,5 +25,6 @@ jobs:
     - name: Docker push
       run: docker push registry.lims.com/action/sparklms:${{ github.run_number }}
 
-    - name: Deploy
-      run: kubectl get po
+    - name: Update manifest
+      run: |
+           sed -i  's/1/${{ github.run_number }}/g' kubernetesdeploy/springdeploy.yml
