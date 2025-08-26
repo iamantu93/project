@@ -5,12 +5,16 @@ pipeline {
         BRANCH = "master"
         GIT_REPO = "https://github.com/iamantu93/project.git"
         DOCKER_REGISTRY = "iamantu93/project"
+        JAVA_HOME = "/usr/lib/jvm/java-11-openjdk-11.0.25.0.9-7.el9.x86_64"
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
     stages {
         stage('Build stage') {
             steps {
                 script {
                     echo 'This is maven build stage'
+                    sh 'mvn --version'
+                    sh 'java --version'
                     sh 'sudo alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.25.0.9-7.el9.x86_64/bin/java'
                     sh 'mvn clean package -X -Dmaven.test.skip=true'
 
