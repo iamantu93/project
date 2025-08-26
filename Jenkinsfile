@@ -16,7 +16,7 @@ pipeline {
                     sh 'mvn --version'
                     sh 'java --version'
                     sh 'sudo alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.25.0.9-7.el9.x86_64/bin/java'
-                    sh 'mvn clean package -X -Dmaven.test.skip=true'
+                    sh 'mvn clean package  -Dmaven.test.skip=true'
 
                 }
             } 
