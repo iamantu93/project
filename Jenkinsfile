@@ -42,7 +42,7 @@ pipeline {
                 echo 'This is deploy stage'
                 script {
                     sh "sed -i 's|\\(iamantu93/project:\\)[0-9]\\+|\\1${BUILD_ID}|' kubernetesdeploy/springdeploy.yml"
-                    sh 'kubectl  --kubeconfig /root/.kubeconfig apply -f kubernetesdeploy/springdeploy.yml'
+                    sh 'kubectl  --kubeconfig /var/lib/jenkins/.kubeconfig apply -f kubernetesdeploy/springdeploy.yml'
 
                 }
             } 
