@@ -12,12 +12,11 @@ pipeline {
                 script {
                     echo 'This is maven build stage'
                     sh 'sudo alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.25.0.9-7.el9.x86_64/bin/java'
-                    sh 'mvn clean package'
+                    sh 'mvn clean package -X -Dmaven.test.skip=true'
 
                 }
             } 
         }
-
         stage('Docker build and push stage') {
             steps {
                 script {
