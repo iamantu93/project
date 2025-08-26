@@ -1,9 +1,6 @@
 pipeline {
     agent any
-    parameters {
-        string(name: 'PERSON', defaultValue: 'Antu Acharjee', description: 'Who should I say hello to?')
-        choice(name: 'DEPARTMENT', choices: ['DevOps', 'Java EE', 'iOS', 'Android'], description: 'Pick a department')
-    }
+}
     environment {
         BRANCH = "master"
         GIT_REPO = "https://github.com/iamantu93/project.git"
@@ -13,46 +10,46 @@ pipeline {
         stage('Build stage') {
             steps {
                 script {
-                    echo 'This is build stage'
+                    echo 'This is maven build stage'
+                    sh 'sudo alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.25.0.9-7.el9.x86_64/bin/java'
                     sh 'mvn clean package'
-                    sh "docker build -t ${DOCKER_REGISTRY}:${BUILD_ID} ."  // Use ${DOCKER_REGISTRY} and ${BUILD_ID} directly
-                    sh "docker push ${DOCKER_REGISTRY}:${BUILD_ID}"
+
                 }
             } 
         }
+
+        stage('Docker build and push stage') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_REGISTRY}:${BUILD_ID} ."  // Use ${DOCKER_REGISTRY} and ${BUILD_ID} directly
+                    sh "docker push ${DOCKER_REGISTRY}:${BUILD_ID}"
+                }
+            }
+            
+        }
+        
         stage('Clean Up') {
             steps {
                 sh "docker rmi -f ${DOCKER_REGISTRY}:${BUILD_ID}"
             }
         }
-        stage('Test stage') {
-            steps {
-                echo 'This is Test stage'
-            } 
-        }
-        stage('Updating manifest in git') {
+
+        stage('Deploy') {
             steps {
                 echo 'This is deploy stage'
                 script {
                     sh "sed -i 's|\\(iamantu93/project:\\)[0-9]\\+|\\1${BUILD_ID}|' kubernetesdeploy/springdeploy.yml"
-                   /*
-                    sh "git add ."
-                    sh "git commit -m 'Updated build is ${BUILD_ID} ' "
-                    withCredentials(credentialsId: 'iamantu93') {
-                        sh "git push origin master"
-                    }
-                    */ 
+                    sh 'kubectl  --kubeconfig /root/.kubeconfig apply -f kubernetesdeploy/springdeploy.yml'
+
                 }
-            } // <-- Added the missing closing brace here
+            } 
         }
     }
-    /*
+    
     post { 
         success { 
             cleanWs()
             echo 'Status is green'
-            echo "successfully built and deployed by ${PERSON}"
-            echo "A proud ${DEPARTMENT} engineer"
         }
         failure {
             cleanWs()
@@ -63,5 +60,4 @@ pipeline {
             echo "Build is unstable"
         }
     }
-    */
 }
